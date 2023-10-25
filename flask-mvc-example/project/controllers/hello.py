@@ -14,7 +14,7 @@ def index():
                 "username": user.username,
                 "email": user.email
             }
-        except err:
+        except Exception as err:
             print (err)
 
     else:
