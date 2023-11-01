@@ -29,10 +29,11 @@ def findCarByReg(reg):
         return nodes_json
 
 def save_car(make, model, reg, year, capacity):
-    cars = _get_connection().execute_query("MERGE (a:Car{make: $make, model: $model, reg: $reg,year: $year, capacity:$capacity}) RETURN a;", make = make, model = model, reg = reg, year =year, capacity = capacity)
-    nodes_json = [node_to_json(record["a"]) for record in cars]
-    print(nodes_json)
-    return nodes_json
+    with _get_connection().session() as session:
+        cars = session.run("MERGE (a:Car{make: $make, model: $model, reg: $reg,year: $year, capacity:$capacity}) RETURN a;", make = make, model = model, reg = reg, year =year, capacity = capacity)
+        nodes_json = [node_to_json(record["a"]) for record in cars]
+        print(nodes_json)
+        return nodes_json
 
 def update_car(make, model, reg, year, capacity):
     with _get_connection().session() as session:
